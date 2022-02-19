@@ -24,7 +24,6 @@ import java.util.*
 
 
 class GlobalActionBarService : AccessibilityService() {
-    private var MODE_TALK_BACK_SCREEN: Boolean=false
     var mLayout: FrameLayout? = null
     private val TAG = "GlobalActionBarService"
     var wifiFunction = false
@@ -44,21 +43,8 @@ class GlobalActionBarService : AccessibilityService() {
                     return
                 }
                 var list2 = nodeInfo.childCount
-//                Log.e(TAG, "onAccessibilityEvent-final: "+goThroughChildren(nodeInfo)?.className )
                 explore(nodeInfo,switchOn)
 
-//                var list = nodeInfo
-//                    .findAccessibilityNodeInfosByViewId("com.android.settings:id/left_button")
-//                for (node in list) {
-//                    Log.e(TAG, "ACC::onAccessibilityEvent: left_button $node")
-////                    node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-//                }
-//                list = nodeInfo
-//                    .findAccessibilityNodeInfosByViewId("android:id/button1")
-//                for (node in list) {
-//                    Log.e(TAG, "ACC::onAccessibilityEvent: button1 $node")
-////                    node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-//                }
             } else {
                 Log.e(TAG, "onAccessibilityEvent: ${wifiFunction.toString()}")
             }
@@ -95,52 +81,6 @@ class GlobalActionBarService : AccessibilityService() {
 
     }
 
-    fun goThroughChildren(nodeInfo: AccessibilityNodeInfo): AccessibilityNodeInfo? {
-        if (nodeInfo.childCount > 0) {
-            for (i in 0 until nodeInfo.childCount) {
-                val node = nodeInfo.getChild(i)
-                Log.e(TAG, "onAccessibilityEvent-subChild: " + node.childCount)
-                if (node.className.contains("Switch")) {
-//                    node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-//                    if (node.isChecked) {
-//                        Log.e(TAG, "onAccessibilityEvent: ischecked")
-//                        node.isChecked = false
-//                    } else {
-//                        Log.e(TAG, "onAccessibilityEvent: isnotchecked")
-//                        node.isChecked = true
-//                    }
-                    return node
-                } else {
-                    if (node.className.contains("TextView")&&node.text!=null&&node.text.contains("Wi-Fi")) {
-                        node.parent.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.e(TAG, "THIS IS WIFI " )
-                        Log.e(TAG, "goThroughChildren-parent: "+node.parent?.className )
-                        Log.e(TAG, "goThroughChildren--parent: "+node.parent?.parent?.className )
-                        Log.e(TAG, "goThroughChildren-parent,children: "+node.parent?.childCount )
-                    }
-                    Log.e(TAG, "onAccessibilityEvent-not checkable: " + node.className)
-                    if (node.childCount>0){
-                        return goThroughChildren(node)
-                    }
-                }
-            }
-        } else {
-
-            if (nodeInfo.className.contains("Switch")) {
-//                if (nodeInfo.isChecked) {
-//                    Log.e(TAG, "onAccessibilityEvent: ischecked")
-//                    nodeInfo.isChecked = false
-//                } else {
-//                    Log.e(TAG, "onAccessibilityEvent: isnotchecked")
-//                    nodeInfo.isChecked = true
-//                }
-                return nodeInfo
-            } else {
-                Log.e(TAG, "onAccessibilityEvent-not checkable: " + nodeInfo.className)
-            }
-        }
-        return null
-    }
     override fun onInterrupt() {
         TODO("Not yet implemented")
     }
