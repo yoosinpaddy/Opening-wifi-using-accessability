@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+        <Button
+            android:id="@+id/power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/power" />
+
+        <Button
+            android:id="@+id/volume_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/volume" />
+
+        <Button
+            android:id="@+id/scroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/scroll" />
+
+        <Button
+            android:id="@+id/swipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/swipe" />
+        <Button
+            android:id="@+id/sOn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Switch On" />
+        <Button
+            android:id="@+id/sOff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Switch Off" />
+</LinearLayout>

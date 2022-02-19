@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Opening wifi using accessability</string>
+    <string name="power">Power</string>
+    <string name="volume">Volume</string>
+    <string name="scroll">Scroll</string>
+    <string name="swipe">Swipe</string>
+    <string name="magic">Magic</string>
+</resources>
