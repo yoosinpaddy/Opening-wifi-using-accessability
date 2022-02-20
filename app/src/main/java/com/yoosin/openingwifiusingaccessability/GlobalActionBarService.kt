@@ -107,9 +107,10 @@ class GlobalActionBarService : AccessibilityService() {
         for (i in 0 until count) {
             val child = view.getChild(i)
             if (wifiFunction) {
-                if (child!=null&&child.text != null && (child.text.toString().toLowerCase()
-                        .contains("wi-fi")||child.text.toString().toLowerCase()
-                        .contains("on")||child.text.toString().toLowerCase()
+                if (child!=null&&child.text != null && (child.text.toString()
+                        .lowercase(Locale.getDefault())
+                        .contains("wi-fi")|| child.text.toString().lowercase(Locale.getDefault())
+                        .contains("on")|| child.text.toString().lowercase(Locale.getDefault())
                         .contains("off"))&&child.className.contains("Switch")
                 ) {
                     Log.e(TAG, "explore: "+child.className )
