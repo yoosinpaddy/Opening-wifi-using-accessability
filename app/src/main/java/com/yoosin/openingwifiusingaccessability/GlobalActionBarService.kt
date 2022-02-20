@@ -43,7 +43,9 @@ class GlobalActionBarService : AccessibilityService() {
                     return
                 }
                 var list2 = nodeInfo.childCount
-                explore(nodeInfo,switchOn)
+                exploreHuawei(nodeInfo, switchOn)
+//                Not working here
+//                exploreInEmulator(nodeInfo, switchOn)
 
             } else {
                 Log.e(TAG, "onAccessibilityEvent: ${wifiFunction.toString()}")
@@ -61,9 +63,9 @@ class GlobalActionBarService : AccessibilityService() {
             val i = Intent(Settings.ACTION_WIFI_SETTINGS)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             wifiFunction = true
-            switchOn=true
-            magicButton.isEnabled=false
-            magic2Button.isEnabled=true
+            switchOn = true
+            magicButton.isEnabled = false
+            magic2Button.isEnabled = true
             startActivity(i);
 
         }
@@ -72,9 +74,9 @@ class GlobalActionBarService : AccessibilityService() {
             val i = Intent(Settings.ACTION_WIFI_SETTINGS)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             wifiFunction = true
-            switchOn=false
-            magicButton.isEnabled=true
-            magic2Button.isEnabled=false
+            switchOn = false
+            magicButton.isEnabled = true
+            magic2Button.isEnabled = false
             startActivity(i);
 
         }
@@ -100,42 +102,104 @@ class GlobalActionBarService : AccessibilityService() {
      * Tested in Huawei
      * Android 10
      */
-    private fun explore(view: AccessibilityNodeInfo,switchOn:Boolean) {
+    private fun exploreHuawei(view: AccessibilityNodeInfo, switchOn: Boolean) {
+        Log.e(TAG, "exploreHuawei: start")
         if (!wifiFunction)
             return
         val count = view.childCount
         for (i in 0 until count) {
             val child = view.getChild(i)
             if (wifiFunction) {
-                if (child!=null&&child.text != null && (child.text.toString()
+                if (child != null && child.text != null && (child.text.toString()
                         .lowercase(Locale.getDefault())
-                        .contains("wi-fi")|| child.text.toString().lowercase(Locale.getDefault())
-                        .contains("on")|| child.text.toString().lowercase(Locale.getDefault())
-                        .contains("off"))&&child.className.contains("Switch")
+                        .contains("wi-fi") || child.text.toString().lowercase(Locale.getDefault())
+                        .contains("on") || child.text.toString().lowercase(Locale.getDefault())
+                        .contains("off")) && child.className.contains("Switch")
                 ) {
-                    Log.e(TAG, "explore: "+child.className )
-                    Log.e(TAG, "explore: "+child.text )
+                    Log.e(TAG, "exploreHuawei: " + child.className)
+                    Log.e(TAG, "exploreHuawei: " + child.text)
                     wifiFunction = false
 
-                    if (child.isChecked&&!switchOn){
-                            child.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    if (child.isChecked && !switchOn) {
+                        child.performAction(AccessibilityNodeInfo.ACTION_CLICK)
 
-                performGlobalAction(GLOBAL_ACTION_HOME)
-                    }else if (!child.isChecked&&switchOn){
+                        performGlobalAction(GLOBAL_ACTION_HOME)
+                    } else if (!child.isChecked && switchOn) {
 
                         child.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                         performGlobalAction(GLOBAL_ACTION_HOME)
-                    }else{
+                    } else {
 
                         performGlobalAction(GLOBAL_ACTION_HOME)
                     }
-                    Log.e(TAG, "explore: "+child.isChecked )
+                    Log.e(TAG, "exploreHuawei: " + child.isChecked)
                 }
             }
-            explore(child,switchOn)
+            exploreHuawei(child, switchOn)
             child.recycle()
         }
     }
+
+    /**
+     * Tested in android emulator
+     * Android 10
+     */
+//    private fun exploreInEmulator(view: AccessibilityNodeInfo, switchOn: Boolean) {
+//        Log.e(TAG, "exploreInfinix: start" )
+//        if (!wifiFunction)
+//            return
+//        val count = view.childCount
+//        for (i in 0 until count) {
+//            val child = view.getChild(i)
+//            if (wifiFunction) {
+//                Log.e(TAG, "exploreInfinix: " + child.className)
+//                Log.e(TAG, "exploreInfinix: " + child.text)
+//                if (child.className.contains("Switch")
+//                ) {
+//                    Log.e(TAG, "exploreInfinix: " + child.toString())
+////                    Log.e(TAG, "exploreInfinix: " + child.text)
+////                    wifiFunction = false
+//
+//                    if (child.isChecked && !switchOn) {
+//                        Log.e(TAG, "exploreInfinix: try to click -ischecked & command not on", )
+//                        var res=child.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+//                        Log.e(TAG, "exploreInEmulator clickResults:${res} ", )
+//                        if (!res){
+//                            child.isChecked=true
+//                        }
+//
+////                        performGlobalAction(GLOBAL_ACTION_HOME)
+//                    } else if (!child.isChecked && switchOn) {
+//                        Log.e(TAG, "exploreInfinix: try to click2--isnotchecked & command on", )
+//
+//
+//                        var res=child.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+//                        Log.e(TAG, "exploreInEmulator clickResults:${res} ", )
+//                        if (!res){
+//                            child.isChecked=true
+//                        }
+////                        performGlobalAction(GLOBAL_ACTION_HOME)
+//                    } else {
+//
+//                        Log.e(TAG, "exploreInfinix: command same as current state Command-On:${switchOn}State-On:${child.isChecked}", )
+//                        performGlobalAction(GLOBAL_ACTION_HOME)
+//                    }
+//                    Log.e(TAG, "explore: " + child.isChecked)
+//                }else if(child.className.contains("TextView")&& child.text!=null&& child.text.toString()
+//                        .lowercase(Locale.getDefault()).contains("use wi‑fi")
+//                ){
+//                    Log.e(TAG, "exploreInEmulator: "+child.toString() )
+//                    var res=child.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+//                    Log.e(TAG, "exploreInEmulator clickResults:${res} ", )
+//                    if (!res){
+//                        child.isChecked=true
+//                    }
+//                }
+//            }
+//            exploreInEmulator(child, switchOn)
+//            child.recycle()
+//        }
+//    }
 
     private fun configureVolumeButton() {
         val volumeUpButton = mLayout!!.findViewById<View>(R.id.volume_up) as Button
