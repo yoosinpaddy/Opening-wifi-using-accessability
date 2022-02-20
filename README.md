@@ -1,4 +1,4 @@
-# Opening-wifi-using-accessibility
+# Switching Wifi On and Off using accessibility services
 Switch wifi on and off with accessibility service android
 Warning: This has been tested in Huawer android 10 only
 ## Installation
