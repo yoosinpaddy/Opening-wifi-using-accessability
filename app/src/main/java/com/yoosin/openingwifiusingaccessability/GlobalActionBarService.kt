@@ -95,6 +95,11 @@ class GlobalActionBarService : AccessibilityService() {
             }
         })
     }
+
+    /**
+     * Tested in Huawei
+     * Android 10
+     */
     private fun explore(view: AccessibilityNodeInfo,switchOn:Boolean) {
         if (!wifiFunction)
             return
@@ -102,8 +107,10 @@ class GlobalActionBarService : AccessibilityService() {
         for (i in 0 until count) {
             val child = view.getChild(i)
             if (wifiFunction) {
-                if (child!=null&&child.text != null && child.text.toString().toLowerCase()
-                        .contains("wi-fi")&&child.className.contains("Switch")
+                if (child!=null&&child.text != null && (child.text.toString().toLowerCase()
+                        .contains("wi-fi")||child.text.toString().toLowerCase()
+                        .contains("on")||child.text.toString().toLowerCase()
+                        .contains("off"))&&child.className.contains("Switch")
                 ) {
                     Log.e(TAG, "explore: "+child.className )
                     Log.e(TAG, "explore: "+child.text )
