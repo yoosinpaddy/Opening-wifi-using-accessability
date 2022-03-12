@@ -11,6 +11,7 @@ import android.graphics.Path
 import android.graphics.PixelFormat
 import android.media.AudioManager
 import android.provider.Settings
+import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -30,31 +31,80 @@ class GlobalActionBarService : AccessibilityService() {
     var switchOn = false
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        Log.e(TAG, "ACC::onAccessibilityEvent: " + (event?.getEventType() ?: "uknown"));
-        //TYPE_WINDOW_STATE_CHANGED == 32
-        if (event != null) {
-            if (AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED == event
-                    .getEventType()
-                && wifiFunction
-            ) {
-                val nodeInfo = event!!.source
-                Log.e(TAG, "ACC::onAccessibilityEvent: nodeInfo=$nodeInfo")
-                if (nodeInfo == null) {
-                    return
-                }
-                var list2 = nodeInfo.childCount
-                exploreHuawei(nodeInfo, switchOn)
-//                Not working here
-//                exploreInEmulator(nodeInfo, switchOn)
-
-            } else {
-                Log.e(TAG, "onAccessibilityEvent: ${wifiFunction.toString()}")
-            }
-        } else {
-            Log.e(TAG, "onAccessibilityEvent: event is null")
+        Log.e(TAG, "ACC::onAccessibilityEvent: " + (event?.getEventType() ?: "unknown"));
+        val source = event!!.source
+        /* if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && !event.getClassName().equals("android.app.AlertDialog")) { // android.app.AlertDialog is the standard but not for all phones  */
+        /* if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && !event.getClassName().equals("android.app.AlertDialog")) { // android.app.AlertDialog is the standard but not for all phones  */
+        if (event!!.eventType === AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && !java.lang.String.valueOf(
+                event!!.className
+            ).contains("AlertDialog")
+        ) {
+            return
         }
-    }
+        if (event!!.eventType === AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED && (source == null || source.className != "android.widget.TextView")) {
+            return
+        }
+        if (event!!.eventType === AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED && TextUtils.isEmpty(
+                source!!.text
+            )
+        ) {
+            return
+        }
 
+        val eventText: List<CharSequence>
+
+        eventText = if (event!!.eventType === AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            event!!.text
+        } else {
+            Collections.singletonList(source!!.text)
+        }
+
+        val text: String = processUSSDText(eventText)
+
+        if (TextUtils.isEmpty(text)) return
+
+        // Close dialog
+
+        // Close dialog
+//        performGlobalAction(GLOBAL_ACTION_BACK) // This works on 4.1+ only
+
+
+        Log.d(TAG, text)
+        //TYPE_WINDOW_STATE_CHANGED == 32
+//        if (event != null) {
+//            if (AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED == event
+//                    .getEventType()
+//                && wifiFunction
+//            ) {
+//                val nodeInfo = event!!.source
+//                Log.e(TAG, "ACC::onAccessibilityEvent: nodeInfo=$nodeInfo")
+//                if (nodeInfo == null) {
+//                    return
+//                }
+//                var list2 = nodeInfo.childCount
+//                exploreHuawei(nodeInfo, switchOn)
+////                Not working here
+////                exploreInEmulator(nodeInfo, switchOn)
+//
+//            } else {
+//                Log.e(TAG, "onAccessibilityEvent: ${wifiFunction.toString()}")
+//            }
+//        } else {
+//            Log.e(TAG, "onAccessibilityEvent: event is null")
+//        }
+    }
+    private fun processUSSDText(eventText: List<CharSequence>): String {
+        Log.e(TAG, "processUSSDText: -----------------------------", )
+        for (s in eventText) {
+            Log.e(TAG, "processUSSDText: "+s )
+            val text = s.toString()
+            // Return text if text is the expected ussd response
+            if (true) {
+                return text
+            }
+        }
+        return "null"
+    }
     private fun initializeButtons() {
 
         val magic2Button = mLayout!!.findViewById<View>(R.id.sOff) as Button
